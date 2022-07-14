@@ -356,6 +356,7 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
     }
     
     override fun onTouch(p0: View?, p1: MotionEvent?): Boolean {
+        listener?.onTouch(p0, p1)
         when (p1?.action){
             MotionEvent.ACTION_DOWN -> pause()
             MotionEvent.ACTION_UP -> start()
