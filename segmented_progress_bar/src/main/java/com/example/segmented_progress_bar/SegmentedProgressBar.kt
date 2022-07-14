@@ -222,6 +222,13 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
     }
     
     /**
+     * Starts animation for the following segment or finish if there are no more segments
+     */
+    fun nextOrFinish() {
+        loadSegment(offset = 1, userAction = false)
+    }
+    
+    /**
      * Starts animation for the previous segment
      */
     fun previous() {
@@ -232,7 +239,8 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
      * Restarts animation for the current segment
      */
     fun restartSegment() {
-        loadSegment(offset = 0, userAction = true)
+        setProgressOnce(0)
+        restartAnimationHandler()
     }
     
     /**
