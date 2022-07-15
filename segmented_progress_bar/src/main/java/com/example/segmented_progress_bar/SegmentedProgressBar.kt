@@ -31,7 +31,6 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
     private val viewPagerOnPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             this@SegmentedProgressBar.setPosition(position)
-            start()
         }
     }
     
@@ -181,7 +180,7 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
      * Start/Resume progress animation
      */
     fun start() {
-        pause()
+        removeAnimationCallback()
         val animationUpdateTime = selectedSegment?.animationUpdateTime
         if (animationUpdateTime == null)
             next()
@@ -194,6 +193,10 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
      */
     fun pause() {
         listener?.onPause()
+        removeAnimationCallback()
+    }
+    
+    private fun removeAnimationCallback() {
         animationHandler.removeCallbacks(this)
     }
     
@@ -267,7 +270,7 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
      * e.g. for using with audio/video player with its own progress
      */
     fun setProgress(progressInMs: Long, durationInMs: Long) {
-        animationHandler.removeCallbacks(this)
+        removeAnimationCallback()
         if (durationInMs <= 0) {
             this.invalidate()
             return
@@ -284,7 +287,7 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
      * assert selectedSegment != null
      */
     fun setProgress(progressInMs: Long) {
-        animationHandler.removeCallbacks(this)
+        removeAnimationCallback()
         selectedSegment?.let {
             it.setProgress(progressInMs)
             if (progressInMs >= it.duration)
@@ -330,14 +333,13 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
             }
         }
         val nextSegment = this.segments.getOrNull(nextSegmentIndex)
+        removeAnimationCallback()
         if (nextSegment != null) {
-            pause()
             nextSegment.animationState = Segment.AnimationState.ANIMATING
             animationHandler.postDelayed(this, nextSegment.animationUpdateTime)
             this.listener?.onPageSelected(oldSegmentIndex, nextSegmentIndex)
             changeItemInViewPagerIfNeeded()
         } else {
-            animationHandler.removeCallbacks(this)
             this.listener?.onFinished()
         }
     }
