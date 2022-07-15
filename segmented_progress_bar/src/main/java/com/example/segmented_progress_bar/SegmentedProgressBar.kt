@@ -174,6 +174,7 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
     fun resume(listener: SegmentedProgressBarListener) {
         this.listener = listener
         setViewPagersCallback()
+        start()
     }
     
     /**
