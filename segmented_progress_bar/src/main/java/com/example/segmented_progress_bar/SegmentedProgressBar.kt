@@ -336,7 +336,8 @@ class SegmentedProgressBar : View, Runnable, View.OnTouchListener {
         removeAnimationCallback()
         if (nextSegment != null) {
             nextSegment.animationState = Segment.AnimationState.ANIMATING
-            animationHandler.postDelayed(this, nextSegment.animationUpdateTime)
+            if (nextSegment.useDefaultAnimationTimer)
+                animationHandler.postDelayed(this, nextSegment.animationUpdateTime)
             this.listener?.onPageSelected(oldSegmentIndex, nextSegmentIndex)
             changeItemInViewPagerIfNeeded()
         } else {

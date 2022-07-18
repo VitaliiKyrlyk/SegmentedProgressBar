@@ -1,6 +1,11 @@
 package com.example.segmented_progress_bar
 
-class Segment(duration: Long = DEFAULT_DURATION_IN_MS) {
+/**
+ * @param duration - duration of segment animation
+ * @param useDefaultAnimationTimer - if false, the default animation timer will not be started (you should set the progress manually)
+ *
+ */
+class Segment(duration: Long = DEFAULT_DURATION_IN_MS, val useDefaultAnimationTimer: Boolean = true) {
     
     var duration: Long = duration
         private set
